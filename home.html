@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    
+    <title>Major Incident | Elite Operational Literacy Protocol</title>
+    <meta name="title" content="Major Incident | Elite Service Training">
+    <meta name="description" content="Stop burning cash on turnover. Operational literacy training designed for high-stress service desks. Prevent burnout and reduce attrition.">
+    
+    <meta property="og:image" content="social-share.png"> 
+    <meta property="twitter:image" content="social-share.png">
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <meta name="theme-color" content="#0b1016">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Nosifer&family=Oswald:wght@500;700&family=Rajdhani:wght@500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lite-youtube-embed@0.3.2/src/lite-yt-embed.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/lite-youtube-embed@0.3.2/src/lite-yt-embed.min.js" defer></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mi: {
+                            navy: '#050505',
+                            panel: '#111111',
+                            gold: '#FFC800',
+                            purple: '#4338ca', 
+                            red: '#ef4444',
+                            green: '#39ff14', 
+                            teal: '#2dd4bf', 
+                            blue: '#1c62b2',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        header: ['Oswald', 'sans-serif'],
+                        tech: ['Rajdhani', 'sans-serif'],
+                        horror: ['Nosifer', 'cursive'],
+                        dos: ['Share Tech Mono', 'monospace'],
+                    },
+                    backgroundImage: {
+                        'grid-pattern': "linear-gradient(to right, #1f2937 1px, transparent 1px), linear-gradient(to bottom, #1f2937 1px, transparent 1px)",
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'sound-bars': 'sound-bars 0.8s ease-in-out infinite alternate',
+                        'slide-down': 'slideDown 0.5s ease-out forwards',
+                    },
+                    keyframes: {
+                        'sound-bars': { '0%': { height: '10%' }, '100%': { height: '100%' } },
+                        slideDown: { '0%': { transform: 'translateY(-100%)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+                    },
+                    dropShadow: {
+                        'neon': '0 0 8px rgba(57, 255, 20, 0.8)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body { background-color: #050505; color: white; overflow-x: hidden; }
+        
+        .cut-button { clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); }
+        .bg-tech-grid { background-size: 50px 50px; }
+        
+        .easter-scanlines {
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none;
+            z-index: 40;
+        }
+
+        .shutdown-anim { animation: crtOff 0.4s cubic-bezier(0.7,0,0.8,0) forwards; }
+        .power-on-anim { animation: crtOn 1.5s cubic-bezier(0.2,1,0.3,1) forwards; }
+        @keyframes crtOff { 0% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1, 0.002); } 100% { transform: scale(0); } }
+        @keyframes crtOn { 0% { transform: scaleY(0.002) scaleX(0); } 50% { transform: scaleY(0.002) scaleX(1); } 100% { transform: scale(1); } }
+
+        lite-youtube { max-width: 100%; }
+        lite-youtube::before { display: none; }
+
+        .logo-gold {
+            filter: brightness(0) saturate(100%) invert(76%) sepia(98%) saturate(1032%) hue-rotate(359deg) brightness(103%) contrast(106%);
+        }
+    </style>
+</head>
+<body id="main-interface" class="font-sans antialiased selection:bg-mi-gold selection:text-mi-navy">
+    
+    <div class="fixed bottom-0 left-0 h-1 bg-mi-navy z-[1000] w-full">
+        <div id="scroll-hud" class="h-full bg-mi-gold shadow-[0_0_10px_#FFC800]"></div>
+    </div>
+
+    <div id="bsod-screen" class="fixed inset-0 z-[9999] bg-mi-navy hidden flex-col items-center justify-center font-tech text-mi-red p-4 border-8 border-mi-red easter-scanlines" role="alert">
+        <div class="absolute inset-0 bg-tech-grid opacity-10"></div>
+        <div class="text-center max-w-2xl bg-black/90 p-12 border border-mi-red/50 relative shadow-[0_0_100px_rgba(239,68,68,0.4)]">
+            <h1 class="text-6xl font-header uppercase mb-2 tracking-widest">SYSTEM HALTED</h1>
+            <p class="text-xl font-mono mb-8 text-mi-red/70">ERR_UNAUTHORIZED_ACCESS // KONAMI_OVERRIDE</p>
+            <button onclick="startReboot()" class="px-8 py-4 bg-mi-red text-black font-header font-bold text-xl uppercase tracking-widest hover:bg-white transition-colors cut-button animate-pulse">
+                [ REGAIN COMMAND ]
+            </button>
+        </div>
+    </div>
+
+    <div id="boot-sequence" class="fixed inset-0 z-[10000] bg-black hidden p-12 font-dos text-mi-teal text-xl leading-relaxed easter-scanlines">
+        <div id="terminal-text" class="max-w-4xl mx-auto"></div>
+    </div>
+
+    <div id="codec-overlay" class="fixed inset-0 z-[5000] bg-black/95 backdrop-blur-md hidden items-center justify-center p-4 easter-scanlines">
+        <div class="w-full max-w-3xl bg-black border-y-4 border-mi-teal">
+            <div class="flex justify-between bg-mi-teal/10 px-4 py-2 border-b border-mi-teal/30 font-tech text-mi-teal text-xs tracking-widest">
+                <span>SECURE CHANNEL // 140.85</span>
+                <span class="animate-pulse">ENCRYPTED</span>
+            </div>
+            <div class="grid grid-cols-3 h-48 bg-mi-navy relative">
+                <div class="border-r border-mi-teal/20 flex items-center justify-center relative">
+                    <i data-lucide="user" class="w-16 h-16 text-mi-teal/50"></i>
+                    <div class="absolute bottom-2 left-2 font-tech text-mi-teal text-[10px]">OPERATOR</div>
+                </div>
+                <div class="flex items-center justify-center gap-1">
+                    <div class="w-1 bg-mi-teal h-8 animate-sound-bars"></div>
+                    <div class="w-1 bg-mi-teal h-12 animate-sound-bars"></div>
+                    <div class="w-1 bg-mi-teal h-6 animate-sound-bars"></div>
+                </div>
+                <div class="border-l border-mi-teal/20 flex items-center justify-center relative overflow-hidden">
+                    <img src="major-incident.png" class="w-full h-full object-cover opacity-80 mix-blend-screen grayscale">
+                    <div class="absolute bottom-2 right-2 font-tech text-mi-teal text-[10px]">MAJOR INCIDENT</div>
+                </div>
+            </div>
+            <div class="p-6 font-dos text-mi-teal text-lg">
+                "Excellent work finding the backdoor. We are still in stealth mode. Take this Access Key. When we launch, quote it for Priority Clearance."
+                <div class="mt-4 flex gap-4 items-center">
+                    <div class="bg-mi-teal/10 border border-mi-teal px-4 py-2 select-all font-header tracking-widest">KONAMI20</div>
+                    <button onclick="closeCodec()" class="text-white hover:text-mi-teal underline decoration-mi-teal underline-offset-4 font-bold text-sm uppercase">DISCONNECT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main id="site-content" class="relative bg-mi-navy min-h-screen flex flex-col">
+
+        <div id="access-badge" class="fixed top-24 right-8 z-50 hidden animate-slide-down">
+            <div class="bg-mi-panel border border-mi-teal/50 p-4 shadow-[0_0_30px_rgba(45,212,191,0.2)] flex gap-4 items-center">
+                <i data-lucide="gamepad-2" class="text-mi-teal w-6 h-6"></i>
+                <div>
+                    <div class="text-[10px] text-mi-teal/60 font-tech uppercase tracking-widest">>> CLASSIC MODE</div>
+                    <div class="font-header text-white text-lg">ACHIEVEMENT UNLOCKED</div>
+                </div>
+            </div>
+        </div>
+
+        <nav class="fixed top-0 w-full z-40 bg-mi-navy/90 backdrop-blur-md border-b border-white/10">
+            <div class="container mx-auto px-6 h-20 flex items-center justify-between">
+                <div class="flex items-center gap-4 group">
+                    <div class="w-10 h-10 bg-mi-panel border border-mi-gold flex items-center justify-center overflow-hidden p-1">
+                        <img src="MILogo.svg" class="w-full h-full object-contain logo-gold group-hover:scale-110 transition-transform">
+                    </div>
+                    <div class="leading-none">
+                        <div class="font-display font-bold text-white text-xl uppercase tracking-wide">Major Incident</div>
+                        <div class="font-tech text-mi-gold text-[10px] tracking-widest animate-pulse">SYSTEM INITIALIZING...</div>
+                    </div>
+                </div>
+                
+                <a href="mailto:vanguard@major-incident.com?subject=Major%20Incident%20-%20I%27m%20Interested" 
+                   class="hidden md:flex bg-mi-gold text-mi-navy px-6 py-2 font-display font-bold uppercase tracking-wide cut-button hover:bg-white hover:scale-105 transition-all shadow-[4px_4px_0_rgba(255,200,0,0.4)]">
+                   Get In Touch
+                </a>
+            </div>
+        </nav>
+
+        <header class="relative pt-32 pb-20 px-6 flex-grow flex items-center">
+            <div class="absolute inset-0 bg-grid-pattern opacity-10 pointer-events-none"></div>
+            
+            <div class="container mx-auto max-w-5xl relative z-10 flex flex-col items-center text-center">
+                
+                <div class="inline-flex items-center gap-3 border border-mi-gold/30 bg-mi-gold/5 px-4 py-2 mb-8 backdrop-blur-sm">
+                    <span class="w-2 h-2 bg-mi-gold rounded-full animate-pulse"></span>
+                    <span class="font-tech text-mi-gold uppercase tracking-[0.2em] text-sm font-bold">Status: In Development</span>
+                </div>
+
+                <h1 class="text-6xl md:text-8xl font-display font-black text-white uppercase leading-[0.85] tracking-tightest mb-8">
+                    Operational<br>
+                    <span class="text-mi-gold drop-shadow-glow">Literacy.</span>
+                </h1>
+                
+                <p class="text-xl md:text-2xl text-gray-400 max-w-3xl font-sans leading-relaxed mb-10">
+                    You are burning cash on turnover and burning out your best engineers. <br>
+                    <strong class="text-white">We fix the human element of your Service Desk.</strong>
+                </p>
+
+                <div class="w-full max-w-md">
+                    <a href="mailto:vanguard@major-incident.com?subject=Major%20Incident%20-%20I%27m%20Interested&body=Hey%2C%0A%0AI%20came%20across%20Major%20Incident%20and%20I%27m%20interested%20in%20learning%20more.%0A%0A" 
+                       class="group flex items-center justify-between w-full bg-mi-gold text-mi-navy px-8 py-6 font-display font-bold text-xl uppercase tracking-wide cut-button hover:bg-white hover:scale-[1.02] transition-all shadow-[8px_8px_0_rgba(0,0,0,0.5)]">
+                        <span>Get Involved</span>
+                        <i data-lucide="arrow-right" class="group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+                    <p class="mt-4 text-gray-500 text-sm font-sans flex items-center justify-center gap-2">
+                        Want early access? Have ideas? We're listening.
+                    </p>
+                </div>
+
+                <div class="mt-16 w-full max-w-2xl bg-white text-mi-navy relative border-l-8 border-mi-blue shadow-2xl skew-x-[-2deg]">
+                    <div class="skew-x-[2deg]">
+                        <div class="bg-mi-blue text-white text-[10px] font-display font-bold px-3 py-1 uppercase tracking-widest absolute top-0 right-0">
+                            Priority Interrupt
+                        </div>
+                        <div class="p-8 flex flex-col md:flex-row items-center gap-6 text-left">
+                            <div class="flex-1">
+                                <h3 class="font-display font-bold text-2xl uppercase leading-none mb-2">System Critical?</h3>
+                                <p class="text-sm font-medium leading-relaxed text-gray-700">
+                                    Can't wait for the training protocol? Need operational support <span class="underline decoration-mi-blue decoration-2 underline-offset-2 font-bold">right now?</span>
+                                </p>
+                            </div>
+                            <div class="flex-shrink-0">
+                                <a href="https://servicedeskcoach.com" target="_blank" class="bg-mi-blue text-white font-display font-bold text-sm px-6 py-3 hover:bg-mi-navy hover:text-white transition-all whitespace-nowrap inline-flex items-center gap-2 shadow-lg">
+                                    Deploy Our Coach
+                                    <i data-lucide="external-link" class="w-4 h-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-16">
+                    <a href="#identity" class="flex flex-col items-center gap-2 text-gray-500 hover:text-mi-gold transition-colors group">
+                        <span class="font-tech text-xs uppercase tracking-widest">System Identification</span>
+                        <i data-lucide="chevrons-down" class="w-6 h-6 animate-bounce text-mi-gold"></i>
+                    </a>
+                </div>
+
+            </div>
+        </header>
+
+        <section id="identity" class="py-24 bg-mi-panel relative border-y border-white/5">
+            <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                
+                <div class="order-2 lg:order-1">
+                    <div class="mb-6 flex items-center gap-3">
+                        <div class="h-[2px] w-12 bg-mi-gold"></div>
+                        <span class="font-tech text-mi-gold uppercase tracking-[0.2em] text-sm">Definition</span>
+                    </div>
+
+                    <h2 class="font-display font-bold text-5xl md:text-6xl text-white uppercase leading-none mb-8">
+                        Who is<br>Major Incident?
+                    </h2>
+
+                    <div class="space-y-6 text-lg text-gray-400 font-sans leading-relaxed border-l-2 border-mi-purple pl-6">
+                        <p>
+                            <span class="text-mi-gold font-bold">Major Incident</span> is not just a person. It is an <strong class="text-white">Archetype</strong>. It represents the elite operator every service desk needs but rarely hires.
+                        </p>
+                        <p>
+                            However, the <strong class="text-white">Major Incident Protocol</strong> is the <em>training system</em> we built to create them.
+                        </p>
+                        <p>
+                            We deprogram the "ticket zombie" mindset and install the operating system of a Systems Engineer. We turn reactive ticket-loggers into proactive <strong class="text-white">Incident Commanders.</strong>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="order-1 lg:order-2 flex flex-col items-center justify-center">
+                    <div class="relative w-full max-w-md aspect-square bg-mi-navy border border-white/10 p-2 shadow-2xl group cursor-pointer">
+                        <div class="absolute inset-0 bg-grid-pattern opacity-30"></div>
+                        
+                        <img 
+                            src="major-incident-zombie.png" 
+                            alt="Ticket Zombie" 
+                            class="absolute inset-2 z-10 w-[calc(100%-1rem)] h-[calc(100%-1rem)] object-cover transition-opacity duration-700 ease-in-out group-hover:opacity-0"
+                        >
+                        <img 
+                            src="major-incident.png" 
+                            alt="Major Incident Commander" 
+                            class="absolute inset-2 z-10 w-[calc(100%-1rem)] h-[calc(100%-1rem)] object-cover opacity-0 transition-opacity duration-700 ease-in-out group-hover:opacity-100"
+                        >
+                        
+                        <div class="absolute bottom-4 left-4 z-20">
+                            <div class="font-display font-bold text-4xl text-white uppercase leading-none">Stop Breeding</div>
+                            <div class="font-horror text-5xl text-mi-green drop-shadow-neon mt-1">Ticket Zombies</div>
+                        </div>
+
+                        <div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-mi-gold"></div>
+                        <div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-mi-gold"></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <section id="recovery" class="py-24 bg-mi-navy relative">
+            <div class="container mx-auto px-6 max-w-5xl">
+                <div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
+                    <div>
+                        <span class="font-tech text-mi-teal uppercase tracking-widest text-sm mb-2 block">/// Support Protocol</span>
+                        <h2 class="font-display font-bold text-4xl text-white uppercase">Tactical Recovery</h2>
+                        <p class="text-gray-400 max-w-lg mt-4 font-sans">
+                            High-pressure environments require high-quality rest. Use this automated care package to reset your nervous system.
+                        </p>
+                    </div>
+                    <div class="font-tech text-mi-teal text-xs tracking-widest border border-mi-teal/30 px-3 py-1 bg-mi-teal/5">
+                        AUDIO: ENABLED
+                    </div>
+                </div>
+                <div class="relative w-full aspect-video bg-black border border-white/10 shadow-2xl overflow-hidden">
+                    <lite-youtube 
+                        videoid="eGI0Rh_aq_Q" 
+                        playlabel="Play: Tactical Recovery Video"
+                        style="background-image: url('https://i.ytimg.com/vi/eGI0Rh_aq_Q/maxresdefault.jpg');"
+                    ></lite-youtube>
+                </div>
+            </div>
+        </section>
+
+        <footer class="py-12 px-6 border-t border-white/10">
+            <div class="max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
+                <div class="max-w-xs">
+                    <div class="font-display font-bold text-lg uppercase mb-4">Major Incident</div>
+                    <div class="text-sm text-gray-500 space-y-1 font-sans">
+                        <p>Verdunplein 17, Box C5800</p>
+                        <p>5627 SZ Eindhoven (mail only)</p>
+                        <p>Netherlands</p>
+                        <p class="mt-4 text-xs font-mono text-gray-600">KVK: 95962603</p>
+                        <p class="text-xs font-mono text-gray-600">BTW: NL005181565B96</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-display font-bold text-sm uppercase mb-4 text-white">Connect</h4>
+                    <div class="flex gap-4 mb-4">
+                        <a href="https://www.linkedin.com/company/major-incident/" target="_blank" class="text-gray-500 hover:text-mi-gold transition-colors"><i data-lucide="linkedin"></i></a>
+                        <a href="https://www.youtube.com/@MajorIncident" target="_blank" class="text-gray-500 hover:text-mi-gold transition-colors"><i data-lucide="youtube"></i></a>
+                    </div>
+                    <a href="mailto:vanguard@major-incident.com" class="text-sm text-gray-500 hover:text-mi-gold transition-colors">vanguard@major-incident.com</a>
+                </div>
+
+                <div class="flex flex-col items-end gap-2 text-right">
+                    <div class="text-xs text-gray-600 uppercase tracking-widest font-tech">Service Agent Literacy</div>
+                    <div class="text-xs text-gray-700 font-sans">© 2026 Major Incident</div>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+
+    <div id="cookie-banner" class="fixed bottom-0 left-0 w-full bg-mi-navy border-t-4 border-mi-gold z-[9000] transform translate-y-full transition-transform duration-500 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                    <i data-lucide="shield-alert" class="w-5 h-5 text-mi-gold"></i>
+                    <span class="font-display text-mi-gold uppercase tracking-widest text-lg">System Permissions</span>
+                </div>
+                <p class="text-sm text-gray-400 font-sans">
+                    We use cookies to load video content. Your preference is stored locally.
+                </p>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="rejectCookies()" class="px-6 py-2 border border-white/20 text-gray-400 font-display uppercase tracking-wide hover:text-white hover:border-white transition-colors text-sm">
+                    Deny
+                </button>
+                <button onclick="acceptCookies()" class="px-8 py-2 bg-mi-gold text-black font-display font-bold uppercase tracking-wide hover:bg-white transition-colors text-sm">
+                    Accept
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const cookieBanner = document.getElementById('cookie-banner');
+        window.addEventListener('load', () => {
+            if (!localStorage.getItem('mi_cookie_consent')) {
+                setTimeout(() => cookieBanner.classList.remove('translate-y-full'), 1000);
+            }
+        });
+
+        window.acceptCookies = function() {
+            localStorage.setItem('mi_cookie_consent', 'true');
+            cookieBanner.classList.add('translate-y-full');
+        }
+
+        window.rejectCookies = function() {
+            localStorage.setItem('mi_cookie_consent', 'false');
+            cookieBanner.classList.add('translate-y-full');
+        }
+
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let cursor = 0;
+        const bsodScreen = document.getElementById('bsod-screen');
+        const mainInterface = document.getElementById('site-content');
+        const bootSequence = document.getElementById('boot-sequence');
+        const codecOverlay = document.getElementById('codec-overlay');
+        const terminalText = document.getElementById('terminal-text');
+        const accessBadge = document.getElementById('access-badge');
+
+        window.onscroll = function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById("scroll-hud").style.width = (winScroll / height) * 100 + "%";
+        };
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === konamiCode[cursor]) {
+                cursor++;
+                if (cursor === konamiCode.length) {
+                    triggerCrash();
+                    cursor = 0;
+                }
+            } else {
+                cursor = 0;
+            }
+        });
+
+        function triggerCrash() {
+            mainInterface.classList.add('shutdown-anim');
+            setTimeout(() => {
+                bsodScreen.classList.remove('hidden');
+                bsodScreen.classList.add('flex');
+            }, 400);
+        }
+
+        function startReboot() {
+            bsodScreen.classList.add('hidden');
+            bsodScreen.classList.remove('flex');
+            bootSequence.classList.remove('hidden');
+
+            const lines = [
+                "MI-DOS v2.6.2 (C) 2026 MAJOR INCIDENT CORP.",
+                "MEMORY TEST: 640K OK",
+                "DETECTING HARDWARE... DONE",
+                "LOADING KERNEL... DONE",
+                "MOUNTING SECURE_CHANNEL.DRV...",
+                "ESTABLISHING ENCRYPTED CONNECTION...",
+                "CONNECTION ESTABLISHED."
+            ];
+
+            let delay = 0;
+            terminalText.innerHTML = "";
+
+            lines.forEach((line) => {
+                delay += Math.random() * 500 + 300;
+                setTimeout(() => {
+                    const p = document.createElement('div');
+                    p.className = "mb-2";
+                    p.textContent = line;
+                    terminalText.appendChild(p);
+                    bootSequence.scrollTop = bootSequence.scrollHeight;
+                }, delay);
+            });
+
+            setTimeout(() => {
+                bootSequence.classList.add('hidden');
+                mainInterface.classList.remove('shutdown-anim');
+                mainInterface.classList.add('power-on-anim');
+                setTimeout(() => {
+                    codecOverlay.classList.remove('hidden');
+                    codecOverlay.classList.add('flex');
+                }, 1000);
+            }, delay + 1500);
+        }
+
+        function closeCodec() {
+            codecOverlay.classList.add('hidden');
+            codecOverlay.classList.remove('flex');
+            accessBadge.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
