@@ -1,1 +1,0 @@
-# majorincident.github.io
