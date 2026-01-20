@@ -56,12 +56,12 @@
                     },
                     animation: {
                         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'sound-bars': 'sound-bars 0.8s ease-in-out infinite alternate',
-                        'slide-down': 'slideDown 0.5s ease-out forwards',
+                        'slide-in': 'slideIn 0.5s ease-out forwards',
+                        'slide-out': 'slideOut 0.5s ease-in forwards',
                     },
                     keyframes: {
-                        'sound-bars': { '0%': { height: '10%' }, '100%': { height: '100%' } },
-                        slideDown: { '0%': { transform: 'translateY(-100%)', opacity: '0' }, '100%': { transform: 'translateY(0)', opacity: '1' } },
+                        slideIn: { '0%': { transform: 'translateX(120%)', opacity: '0' }, '100%': { transform: 'translateX(0)', opacity: '1' } },
+                        slideOut: { '0%': { transform: 'translateX(0)', opacity: '1' }, '100%': { transform: 'translateX(120%)', opacity: '0' } },
                     },
                     dropShadow: {
                         'neon': '0 0 8px rgba(57, 255, 20, 0.8)',
@@ -76,19 +76,6 @@
         body { background-color: #050505; color: white; overflow-x: hidden; }
         
         .cut-button { clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px); }
-        .bg-tech-grid { background-size: 50px 50px; }
-        
-        .easter-scanlines {
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 3px, 3px 100%;
-            pointer-events: none;
-            z-index: 40;
-        }
-
-        .shutdown-anim { animation: crtOff 0.4s cubic-bezier(0.7,0,0.8,0) forwards; }
-        .power-on-anim { animation: crtOn 1.5s cubic-bezier(0.2,1,0.3,1) forwards; }
-        @keyframes crtOff { 0% { transform: scale(1); filter: brightness(1); } 50% { transform: scale(1, 0.002); } 100% { transform: scale(0); } }
-        @keyframes crtOn { 0% { transform: scaleY(0.002) scaleX(0); } 50% { transform: scaleY(0.002) scaleX(1); } 100% { transform: scale(1); } }
 
         lite-youtube { max-width: 100%; }
         lite-youtube::before { display: none; }
@@ -98,69 +85,26 @@
         }
     </style>
 </head>
-<body id="main-interface" class="font-sans antialiased selection:bg-mi-gold selection:text-mi-navy">
+<body class="font-sans antialiased selection:bg-mi-gold selection:text-mi-navy">
     
     <div class="fixed bottom-0 left-0 h-1 bg-mi-navy z-[1000] w-full">
         <div id="scroll-hud" class="h-full bg-mi-gold shadow-[0_0_10px_#FFC800]"></div>
     </div>
 
-    <div id="bsod-screen" class="fixed inset-0 z-[9999] bg-mi-navy hidden flex-col items-center justify-center font-tech text-mi-red p-4 border-8 border-mi-red easter-scanlines" role="alert">
-        <div class="absolute inset-0 bg-tech-grid opacity-10"></div>
-        <div class="text-center max-w-2xl bg-black/90 p-12 border border-mi-red/50 relative shadow-[0_0_100px_rgba(239,68,68,0.4)]">
-            <h1 class="text-6xl font-header uppercase mb-2 tracking-widest">SYSTEM HALTED</h1>
-            <p class="text-xl font-mono mb-8 text-mi-red/70">ERR_UNAUTHORIZED_ACCESS // KONAMI_OVERRIDE</p>
-            <button onclick="startReboot()" class="px-8 py-4 bg-mi-red text-black font-header font-bold text-xl uppercase tracking-widest hover:bg-white transition-colors cut-button animate-pulse">
-                [ REGAIN COMMAND ]
-            </button>
-        </div>
-    </div>
-
-    <div id="boot-sequence" class="fixed inset-0 z-[10000] bg-black hidden p-12 font-dos text-mi-teal text-xl leading-relaxed easter-scanlines">
-        <div id="terminal-text" class="max-w-4xl mx-auto"></div>
-    </div>
-
-    <div id="codec-overlay" class="fixed inset-0 z-[5000] bg-black/95 backdrop-blur-md hidden items-center justify-center p-4 easter-scanlines">
-        <div class="w-full max-w-3xl bg-black border-y-4 border-mi-teal">
-            <div class="flex justify-between bg-mi-teal/10 px-4 py-2 border-b border-mi-teal/30 font-tech text-mi-teal text-xs tracking-widest">
-                <span>SECURE CHANNEL // 140.85</span>
-                <span class="animate-pulse">ENCRYPTED</span>
-            </div>
-            <div class="grid grid-cols-3 h-48 bg-mi-navy relative">
-                <div class="border-r border-mi-teal/20 flex items-center justify-center relative">
-                    <i data-lucide="user" class="w-16 h-16 text-mi-teal/50"></i>
-                    <div class="absolute bottom-2 left-2 font-tech text-mi-teal text-[10px]">OPERATOR</div>
-                </div>
-                <div class="flex items-center justify-center gap-1">
-                    <div class="w-1 bg-mi-teal h-8 animate-sound-bars"></div>
-                    <div class="w-1 bg-mi-teal h-12 animate-sound-bars"></div>
-                    <div class="w-1 bg-mi-teal h-6 animate-sound-bars"></div>
-                </div>
-                <div class="border-l border-mi-teal/20 flex items-center justify-center relative overflow-hidden">
-                    <img src="major-incident.png" class="w-full h-full object-cover opacity-80 mix-blend-screen grayscale">
-                    <div class="absolute bottom-2 right-2 font-tech text-mi-teal text-[10px]">MAJOR INCIDENT</div>
-                </div>
-            </div>
-            <div class="p-6 font-dos text-mi-teal text-lg">
-                "Excellent work finding the backdoor. We are still in stealth mode. Take this Access Key. When we launch, quote it for Priority Clearance."
-                <div class="mt-4 flex gap-4 items-center">
-                    <div class="bg-mi-teal/10 border border-mi-teal px-4 py-2 select-all font-header tracking-widest">KONAMI20</div>
-                    <button onclick="closeCodec()" class="text-white hover:text-mi-teal underline decoration-mi-teal underline-offset-4 font-bold text-sm uppercase">DISCONNECT</button>
-                </div>
+    <!-- Konami Toast -->
+    <div id="konami-toast" class="fixed top-24 right-8 z-50 hidden">
+        <div class="bg-mi-panel border border-mi-teal/50 p-4 shadow-[0_0_30px_rgba(45,212,191,0.2)] flex gap-4 items-start max-w-sm animate-slide-in">
+            <i data-lucide="gamepad-2" class="text-mi-teal w-6 h-6 flex-shrink-0 mt-1"></i>
+            <div>
+                <div class="text-[10px] text-mi-teal/60 font-tech uppercase tracking-widest">>> CLASSIC MODE</div>
+                <div class="font-header text-white text-lg mb-2">ACHIEVEMENT UNLOCKED</div>
+                <p class="text-gray-400 text-sm mb-3">Use code <span class="text-mi-teal font-mono font-bold select-all">KONAMI20</span> at launch for Priority Clearance.</p>
+                <button onclick="closeToast()" class="text-xs text-gray-500 hover:text-white transition-colors">Dismiss</button>
             </div>
         </div>
     </div>
 
-    <main id="site-content" class="relative bg-mi-navy min-h-screen flex flex-col">
-
-        <div id="access-badge" class="fixed top-24 right-8 z-50 hidden animate-slide-down">
-            <div class="bg-mi-panel border border-mi-teal/50 p-4 shadow-[0_0_30px_rgba(45,212,191,0.2)] flex gap-4 items-center">
-                <i data-lucide="gamepad-2" class="text-mi-teal w-6 h-6"></i>
-                <div>
-                    <div class="text-[10px] text-mi-teal/60 font-tech uppercase tracking-widest">>> CLASSIC MODE</div>
-                    <div class="font-header text-white text-lg">ACHIEVEMENT UNLOCKED</div>
-                </div>
-            </div>
-        </div>
+    <main class="relative bg-mi-navy min-h-screen flex flex-col">
 
         <nav class="fixed top-0 w-full z-40 bg-mi-navy/90 backdrop-blur-md border-b border-white/10">
             <div class="container mx-auto px-6 h-20 flex items-center justify-between">
@@ -378,6 +322,7 @@
     <script>
         lucide.createIcons();
 
+        // Cookie banner
         const cookieBanner = document.getElementById('cookie-banner');
         window.addEventListener('load', () => {
             if (!localStorage.getItem('mi_cookie_consent')) {
@@ -395,26 +340,23 @@
             cookieBanner.classList.add('translate-y-full');
         }
 
-        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
-        let cursor = 0;
-        const bsodScreen = document.getElementById('bsod-screen');
-        const mainInterface = document.getElementById('site-content');
-        const bootSequence = document.getElementById('boot-sequence');
-        const codecOverlay = document.getElementById('codec-overlay');
-        const terminalText = document.getElementById('terminal-text');
-        const accessBadge = document.getElementById('access-badge');
-
+        // Scroll progress
         window.onscroll = function() {
             const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             document.getElementById("scroll-hud").style.width = (winScroll / height) * 100 + "%";
         };
 
+        // Konami code → toast
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let cursor = 0;
+        const toast = document.getElementById('konami-toast');
+
         document.addEventListener('keydown', (e) => {
             if (e.key === konamiCode[cursor]) {
                 cursor++;
                 if (cursor === konamiCode.length) {
-                    triggerCrash();
+                    showToast();
                     cursor = 0;
                 }
             } else {
@@ -422,58 +364,16 @@
             }
         });
 
-        function triggerCrash() {
-            mainInterface.classList.add('shutdown-anim');
-            setTimeout(() => {
-                bsodScreen.classList.remove('hidden');
-                bsodScreen.classList.add('flex');
-            }, 400);
+        function showToast() {
+            toast.classList.remove('hidden');
+            toast.querySelector('div').classList.remove('animate-slide-out');
+            toast.querySelector('div').classList.add('animate-slide-in');
         }
 
-        function startReboot() {
-            bsodScreen.classList.add('hidden');
-            bsodScreen.classList.remove('flex');
-            bootSequence.classList.remove('hidden');
-
-            const lines = [
-                "MI-DOS v2.6.2 (C) 2026 MAJOR INCIDENT CORP.",
-                "MEMORY TEST: 640K OK",
-                "DETECTING HARDWARE... DONE",
-                "LOADING KERNEL... DONE",
-                "MOUNTING SECURE_CHANNEL.DRV...",
-                "ESTABLISHING ENCRYPTED CONNECTION...",
-                "CONNECTION ESTABLISHED."
-            ];
-
-            let delay = 0;
-            terminalText.innerHTML = "";
-
-            lines.forEach((line) => {
-                delay += Math.random() * 500 + 300;
-                setTimeout(() => {
-                    const p = document.createElement('div');
-                    p.className = "mb-2";
-                    p.textContent = line;
-                    terminalText.appendChild(p);
-                    bootSequence.scrollTop = bootSequence.scrollHeight;
-                }, delay);
-            });
-
-            setTimeout(() => {
-                bootSequence.classList.add('hidden');
-                mainInterface.classList.remove('shutdown-anim');
-                mainInterface.classList.add('power-on-anim');
-                setTimeout(() => {
-                    codecOverlay.classList.remove('hidden');
-                    codecOverlay.classList.add('flex');
-                }, 1000);
-            }, delay + 1500);
-        }
-
-        function closeCodec() {
-            codecOverlay.classList.add('hidden');
-            codecOverlay.classList.remove('flex');
-            accessBadge.classList.remove('hidden');
+        function closeToast() {
+            toast.querySelector('div').classList.remove('animate-slide-in');
+            toast.querySelector('div').classList.add('animate-slide-out');
+            setTimeout(() => toast.classList.add('hidden'), 500);
         }
     </script>
 </body>
